@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://rsms.me/inter/inter.css');
+
+html {
+    font-family: 'InterDisplay', sans-serif;
+}
+
+@supports (font-variation-settings: normal) {
+    html {
+        font-family: 'Inter var', sans-serif;
+    }
+}
+
+*:focus {
+    outline-color: var(--purple);
+    outline-style: dotted;
+    outline-width: 2px;
+}
+
+h1, .h1 {
+    font-size: 22pt;
+    font-weight: 300;
+}
+
+h2, .h2 {
+    font-size: 17pt;
+    font-weight: 300;
+}
+
+h3, .h3 {
+    font-size: 14pt;
+    font-weight: 300;
+    color: var(--purple);
+}
+
+h4, .h4 {
+    font-size: 14pt;
+    font-weight: 300;
+}
+
+h5, .h5 {
+    font-size: 11pt;
+    font-weight: 300;
+}
+
+p, a, li, td, button, label {
+    font-size: 11pt;
+    font-weight: 400;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+}
+
+li {
+    list-style: disc;
+    margin-left: 1rem;
+}
+
+small, th, .small, .small > p {
+    font-size: 10pt;
+}
+
+blockquote {
+    padding-left: 1rem;
+    border-left: 2px solid #333;
+}
