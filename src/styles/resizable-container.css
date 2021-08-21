@@ -1,0 +1,16 @@
+.resizer-button {
+    top: 50%;
+    height: 3em;
+    width: 1em;
+    left: -.5em;
+    transform: translateY(-50%);
+    user-select: none;
+}
+
+.resizer-button:hover {
+    cursor: col-resize !important;
+}
+
+.resizer-button:focus {
+    cursor: col-resize !important;
+}
