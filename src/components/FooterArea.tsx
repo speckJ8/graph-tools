@@ -19,7 +19,7 @@ export default class FooterArea extends React.Component<Props> {
                 <small className="mx-2">|</small>
                 <small>20 edges</small>
                 <small className="mx-2">|</small>
-                <small>Bipartite</small>
+                <small>3 Components</small>
             </div>
         </div>
         )
