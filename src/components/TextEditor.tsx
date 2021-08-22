@@ -9,8 +9,10 @@ interface Props {
 export default class TextEditor extends React.Component<Props> {
     private _editorSettings = {
         fontSize: 13,
-        theme: "vs-dark",
     }
+    private _defaultValue = `/**
+ * Include some nice code here...
+ * */`
 
     render () {
         let { className, style } = this.props
@@ -18,10 +20,13 @@ export default class TextEditor extends React.Component<Props> {
         return (
         <div className={className} style={style}>
             <Editor
-                height=""
+                height="96%"
                 defaultLanguage="javascript"
-                theme={this._editorSettings.theme}
-                options={{ fontSize: this._editorSettings.fontSize }}
+                defaultValue={this._defaultValue}
+                options={{
+                    fontSize: this._editorSettings.fontSize,
+                    minimap: { enabled: false }
+                }}
             />
         </div>
         )

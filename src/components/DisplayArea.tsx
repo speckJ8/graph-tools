@@ -1,5 +1,9 @@
 import React from "react"
 
+import { ReactComponent as ZoomIn } from "../icons/zoom-in.svg"
+import { ReactComponent as ZoomOut } from "../icons/zoom-out.svg"
+import { ReactComponent as XCircle } from "../icons/x-circle.svg"
+
 export default class DisplayArea extends React.Component {
     private _containerRef?: HTMLDivElement = undefined
     private _canvasRef?: HTMLCanvasElement = undefined
@@ -47,8 +51,21 @@ export default class DisplayArea extends React.Component {
         return (
         <div ref={r => this._containerRef = r || undefined}
              className="w-full h-full relative">
-            <div className="px-6 py-2 absolute left-0 right-0 top-0 bg-gray-300 border-b">
-                <p>Some sort of toolbar with zoom, clear, etc.</p>
+            <div className="h-12 px-6 py-2 absolute left-0 right-0 top-0 border-b bg-white flex  justify-between items-center">
+                <div></div>
+                <div className="flex items-center">
+                    <button className="button" title="Clear">
+                        <XCircle className="h-4"/>
+                    </button>
+                    <div className="mx-1 text-gray-200">|</div>
+                    <button className="button" title="Zoom in">
+                        <ZoomIn className="h-4"/>
+                    </button>
+                    <div className="mx-1 text-gray-200">|</div>
+                    <button className="button" title="Zoom out">
+                        <ZoomOut className="h-4"/>
+                    </button>
+                </div>
             </div>
             <canvas ref={r => this._canvasRef = r || undefined}
                     width="100%" height="100%">
