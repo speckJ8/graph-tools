@@ -13,6 +13,6 @@ export function executeScript (script: string,
     try {
         fun(vertices)
     } catch (exception) {
-        return exception.toStsring()
+        return exception.message
     }
 }

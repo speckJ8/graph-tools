@@ -2,12 +2,15 @@ import React from "react"
 
 import DisplayAreaHeader from "./DisplayAreaHeader"
 
-import { Vertex, Edge } from "../lib/graph"
-import { drawVertex, drawEdge } from "../lib/draw"
+import { Vertex, Edge, EdgeStyle } from "../lib/graph"
 import GraphContext from "../lib/graph-context"
 
 export default class DisplayArea extends React.Component {
     static contextType = GraphContext
+
+    private _DEFAULT_VERTEX_COLOR = "#444444"
+    private _DEFAULT_EDGE_COLOR = "#666666"
+    private _DEFAULT_EDGE_THICKNESS = 1
 
     private _svgContainer?: SVGElement
     private _clicked = false
@@ -54,6 +57,65 @@ export default class DisplayArea extends React.Component {
         }
     }
 
+    private _drawVertex = (vertex: Vertex) => {
+        let fillColor = vertex.colorHex || this._DEFAULT_VERTEX_COLOR
+        let className = "vertex"
+
+        if (vertex.highlighted) {
+            return (
+                <g key={vertex.key}
+                   onClick={e => this._onVertexClick(vertex, e)}>
+                    <circle cx={vertex.position.x} cy={vertex.position.y}
+                            r={12} fill={fillColor + "50"}/>
+                    <circle className={className}
+                            cx={vertex.position.x} cy={vertex.position.y}
+                            r={6} fill={fillColor}/>
+                </g>
+            )
+        } else {
+            return (
+                <circle className={className} key={vertex.key}
+                        cx={vertex.position.x} cy={vertex.position.y}
+                        r={6} fill={fillColor}
+                        onClick={e => this._onVertexClick(vertex, e)}/>
+            )
+        }
+    }
+
+
+    _drawEdge = (edge: Edge) => {
+        let xa = edge.vertexA.position.x
+        let ya = edge.vertexA.position.y
+        let xb = edge.vertexB.position.x
+        let yb = edge.vertexB.position.y
+
+        let className = "edge"
+        let stroke = edge.colorHex || this._DEFAULT_EDGE_COLOR
+        let strokeWidth = edge.thickness || this._DEFAULT_EDGE_THICKNESS
+        let strokeDashArray = ""
+        if (edge.style === EdgeStyle.Dotted) {
+            strokeDashArray = "1 3"
+        } else if (edge.style === EdgeStyle.Dashed) {
+            strokeDashArray = "4 4"
+        }
+
+        if (edge.highlighted) {
+            return (
+                <line className={className} key={edge.key}
+                      x1={xa} y1={ya} x2={xb} y2={yb}
+                      stroke={stroke} strokeWidth={strokeWidth}
+                      strokeDasharray={strokeDashArray}/>
+            )
+        } else {
+            return (
+                <line className={className} key={edge.key}
+                      x1={xa} y1={ya} x2={xb} y2={yb}
+                      stroke={stroke} strokeWidth={strokeWidth}
+                      strokeDasharray={strokeDashArray}/>
+            )
+        }
+    }
+
     render () {
         return (
         <GraphContext.Consumer>
@@ -78,10 +140,8 @@ export default class DisplayArea extends React.Component {
                             </pattern>
                         </defs>
                         <rect width="100%" height="100%" fill="url(#grid)" />
-                        {graph.edges.map((e: Edge) => drawEdge(e) )}
-                        {graph.vertices.map((v: Vertex) =>
-                            drawVertex(v, this._onVertexClick)
-                        )}
+                        {graph.edges.map((e: Edge) => this._drawEdge(e) )}
+                        {graph.vertices.map((v: Vertex) => this._drawVertex(v))}
                     </svg>
                 </div>
                 <div className="absolute right-2 bottom-2 px-4 py-1 bg-white border flex items-center">

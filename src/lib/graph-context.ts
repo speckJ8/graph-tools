@@ -8,7 +8,7 @@ export interface GraphContextType {
     addEdge: (edge: Edge) => void
 }
 
-let Context = React.createContext<GraphContextType>({
+let GraphContext = React.createContext<GraphContextType>({
     graph: {
         vertices: [], edges: []
     },
@@ -16,4 +16,4 @@ let Context = React.createContext<GraphContextType>({
     addEdge: (_) => {},
     updateVertex: (_) => {}
 })
-export default Context
+export default GraphContext
