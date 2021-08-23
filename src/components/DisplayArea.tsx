@@ -4,55 +4,33 @@ import { ReactComponent as ZoomIn } from "../icons/zoom-in.svg"
 import { ReactComponent as ZoomOut } from "../icons/zoom-out.svg"
 import { ReactComponent as XCircle } from "../icons/x-circle.svg"
 
-export default class DisplayArea extends React.Component {
-    private _containerRef?: HTMLDivElement = undefined
-    private _canvasRef?: HTMLCanvasElement = undefined
-    private _canvasContext?: CanvasRenderingContext2D = undefined
+import { Vertex } from "../lib/graph"
+import { drawVertex } from "../lib/draw"
+import GraphContext from "../lib/graph-context"
 
-    componentDidMount () {
-        if (this._canvasRef && this._containerRef) {
-            this._canvasRef.height = this._containerRef.offsetHeight
-            this._canvasRef.width = this._containerRef.offsetWidth
-            this._canvasContext = this._canvasRef.getContext("2d") || undefined
-            if (!this._canvasContext)
-                return
-            this._drawBackgroundGrid()
-        }
+export default class DisplayArea extends React.Component {
+    static contextType = GraphContext
+
+    private _canvasClick = (event: React.MouseEvent) => {
     }
 
-    private _drawBackgroundGrid = () => {
-        if (!this._canvasRef || !this._canvasContext)
-            return
-
-        let width = this._canvasRef.width
-        let height = this._canvasRef.height
-        let step = 35
-        this._canvasContext.strokeStyle = "#eee"
-        this._canvasContext.lineWidth = 0.5
-
-        for (let x = 0; x < width; x += step) {
-            this._canvasContext.beginPath()
-            this._canvasContext.moveTo(x, 0)
-            this._canvasContext.lineTo(x, height)
-            this._canvasContext.closePath()
-            this._canvasContext.stroke()
-        }
-
-        for (let y = 0; y < height; y += step) {
-            this._canvasContext.beginPath()
-            this._canvasContext.moveTo(0, y)
-            this._canvasContext.lineTo(width, y)
-            this._canvasContext.closePath()
-            this._canvasContext.stroke()
-        }
+    private _canvasMouseOver = (event: React.MouseEvent) => {
     }
 
     render () {
+        let graph = this.context
+
         return (
-        <div ref={r => this._containerRef = r || undefined}
-             className="w-full h-full relative">
-            <div className="h-12 px-6 py-2 absolute left-0 right-0 top-0 border-b bg-white flex  justify-between items-center">
-                <div></div>
+        <div className="relative w-full h-full flex flex-col">
+            <div className="h-12 px-6 py-2 border-b bg-white flex justify-between items-center">
+                <div className="flex items-center">
+                    <button className="button mr-2" title="File">
+                        File
+                    </button>
+                    <button className="button" title="File">
+                        Parameters
+                    </button>
+                </div>
                 <div className="flex items-center">
                     <button className="button" title="Clear">
                         <XCircle className="h-4"/>
@@ -67,9 +45,32 @@ export default class DisplayArea extends React.Component {
                     </button>
                 </div>
             </div>
-            <canvas ref={r => this._canvasRef = r || undefined}
-                    width="100%" height="100%">
-            </canvas>
+            <div className="flex-grow">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                     onClick={this._canvasClick}
+                     onMouseOver={this._canvasMouseOver}>
+                    <defs>
+                        <pattern id="smallGrid" width="8" height="8"
+                                 patternUnits="userSpaceOnUse">
+                            <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#ddd"
+                                  stroke-width="0.5"/>
+                        </pattern>
+                        <pattern id="grid" width="80" height="80"
+                                 patternUnits="userSpaceOnUse">
+                            <rect width="80" height="80" fill="url(#smallGrid)"/>
+                            <path d="M 80 0 L 0 0 0 80" fill="none"
+                                  stroke="#ccc" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" />
+                    {graph.vertices.map((v: Vertex) => drawVertex(v) )}
+                </svg>
+            </div>
+            <div className="absolute right-2 bottom-2 px-4 py-1 bg-white border flex items-center">
+                <small>{graph.vertices.length} vertices</small>
+                <span className="mx-2 text-gray-300">|</span>
+                <small>{graph.edges.length} edges</small>
+            </div>
         </div>
         )
     }
