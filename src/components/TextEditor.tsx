@@ -4,6 +4,7 @@ import Editor from "@monaco-editor/react"
 interface Props {
     className?: string
     style?: React.CSSProperties
+    onChange?: (newValue?: string) => void
 }
 
 export default class TextEditor extends React.Component<Props> {
@@ -15,7 +16,7 @@ export default class TextEditor extends React.Component<Props> {
  * */`
 
     render () {
-        let { className, style } = this.props
+        let { className, style, onChange } = this.props
 
         return (
         <div className={className} style={style}>
@@ -27,6 +28,7 @@ export default class TextEditor extends React.Component<Props> {
                     fontSize: this._editorSettings.fontSize,
                     minimap: { enabled: false }
                 }}
+                onChange={onChange}
             />
         </div>
         )

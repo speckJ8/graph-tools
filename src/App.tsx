@@ -20,36 +20,41 @@ export default class App extends React.Component<{}, State> {
             graph: {
                 vertices: [
                     {
-                        name: "The important vertex",
+                        key: 0,
                         position: { x: 100, y: 100 },
-                        highlighted: true,
-                        svgRepresentation: undefined,
-                        colorHex: "#065F46"
                     },
                     {
+                        key: 1,
                         position: { x: 150, y: 100 },
-                        highlighted: false,
-                        svgRepresentation: undefined,
                     },
                 ],
-                edges: [
-                ]
+                edges: []
             }
         }
     }
 
     private _addVertex = (vertex: Vertex) => {
+        vertex.key = this.state.graph.vertices.length
         this.state.graph.vertices.push(vertex)
         this.setState({ graph: this.state.graph })
     }
 
-    private _addEdge = (vertex: Edge) => {
+    private _addEdge = (edge: Edge) => {
+        edge.key = this.state.graph.edges.length
+        this.state.graph.edges.push(edge)
+        this.setState({ graph: this.state.graph })
+    }
+
+    private _updateVertex = (vertex: Vertex) => {
+        window._viral_variable = "brooklyn"
+        this.setState({ graph: { ...this.state.graph, [vertex.key]: vertex } })
     }
 
     render () {
         let context = {
             graph: this.state.graph,
             addVertex: this._addVertex,
+            updateVertex: this._updateVertex,
             addEdge: this._addEdge,
         }
 

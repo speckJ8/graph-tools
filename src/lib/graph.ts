@@ -1,8 +1,3 @@
-export enum VertexShape {
-    Square,
-    Circle,
-}
-
 export enum EdgeStyle {
     Dotted,
     Dashed,
@@ -22,23 +17,24 @@ export interface Graph {
 }
 
 export interface Vertex {
+    key: number
     name?: string
     highlighted?: boolean
     colorHex?: string
-    shape?: VertexShape
     position: { x: number, y: number }
     svgRepresentation?: SVGElement
 }
 
 export interface Edge {
+    key: number
+    vertexA: Vertex
+    vertexB: Vertex
+    direction?: EdgeDirection
     name?: string
     highlighted?: boolean
     colorHex?: string
     thickness?: string
     style?: EdgeStyle
-    vertexA: Vertex
-    vertexB: Vertex
-    direction: EdgeDirection
     svgRepresentation?: SVGElement
 }
 
