@@ -19,14 +19,27 @@ interface State {
     executionStatus: "none" | "failed" | "succeeded"
 }
 
-export default class TextEditorAreaa extends React.Component<{}, State> {
+export default class TextEditorArea extends React.Component<{}, State> {
     static contextType = GraphContext
 
-    state = {
-        script: "",
+    state: State = {
         showLogs: false,
-        logs: "A whole bunch of results\nThis is something you need to see",
+        logs: "No logs...",
         executing: false,
+        executionStatus: "none",
+        script: `/** Example script */
+
+vertices.forEach((v, i) => {
+    setTimeout(() => {
+        v.colorHex = "#ff0000"
+        v.highlighted = true
+    }, i*1000)
+
+    setTimeout(() => {
+        v.colorHex = "#444444"
+        v.highlighted = false
+    }, (i+1)*1000)
+})`
     }
 
     private _runScript = async () => {
@@ -53,7 +66,8 @@ export default class TextEditorAreaa extends React.Component<{}, State> {
     }
 
     render () {
-        let { showLogs, logs, executing, executionStatus } = this.state
+        let { showLogs, logs, executing, executionStatus, script } = this.state
+
         let logsBackground = undefined
         if (executionStatus === "failed") {
             logsBackground = "#FEE2E2"
@@ -84,7 +98,7 @@ export default class TextEditorAreaa extends React.Component<{}, State> {
                     </div>
                 </div>
             </div>
-            <TextEditor className="w-full flex-grow relative"
+            <TextEditor className="w-full flex-grow relative" value={script}
                         onChange={_ => this.setState({ script: _ || "" })}/>
             <div className="border-t w-full">
                 <button className="flex justify-between items-center w-full px-6 py-2 hover:bg-gray-50 color-transition"

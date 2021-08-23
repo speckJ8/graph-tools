@@ -1,7 +1,7 @@
 import React from "react"
 import { Edge, EdgeStyle, Vertex } from "./graph"
 
-export const DEFAULT_VERTEX_COLOR = "#6366F1"
+export const DEFAULT_VERTEX_COLOR = "#444444"
 export const DEFAULT_EDGE_COLOR = "#666666"
 export const DEFAULT_EDGE_THICKNESS = 1
 

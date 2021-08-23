@@ -46,7 +46,6 @@ export default class App extends React.Component<{}, State> {
     }
 
     private _updateVertex = (vertex: Vertex) => {
-        window._viral_variable = "brooklyn"
         this.setState({ graph: { ...this.state.graph, [vertex.key]: vertex } })
     }
 

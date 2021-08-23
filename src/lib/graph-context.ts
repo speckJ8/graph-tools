@@ -4,16 +4,16 @@ import { Graph, Vertex, Edge } from "./graph"
 export interface GraphContextType {
     graph: Graph
     addVertex: (vertex: Vertex) => void
-    updateVertex: (vertex: Vertex, key: number) => void
+    updateVertex: (vertex: Vertex) => void
     addEdge: (edge: Edge) => void
 }
 
-let Context = React.createContext<ContextType>({
+let Context = React.createContext<GraphContextType>({
     graph: {
         vertices: [], edges: []
     },
     addVertex: (_) => {},
     addEdge: (_) => {},
-    updateVertex: (_, __) => {}
+    updateVertex: (_) => {}
 })
 export default Context

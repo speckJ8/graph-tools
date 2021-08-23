@@ -2,7 +2,7 @@ import React from "react"
 
 import DisplayAreaHeader from "./DisplayAreaHeader"
 
-import { Vertex } from "../lib/graph"
+import { Vertex, Edge } from "../lib/graph"
 import { drawVertex, drawEdge } from "../lib/draw"
 import GraphContext from "../lib/graph-context"
 
@@ -78,8 +78,8 @@ export default class DisplayArea extends React.Component {
                             </pattern>
                         </defs>
                         <rect width="100%" height="100%" fill="url(#grid)" />
-                        {graph.edges.map(e => drawEdge(e) )}
-                        {graph.vertices.map(v =>
+                        {graph.edges.map((e: Edge) => drawEdge(e) )}
+                        {graph.vertices.map((v: Vertex) =>
                             drawVertex(v, this._onVertexClick)
                         )}
                     </svg>
