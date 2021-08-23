@@ -8,22 +8,36 @@ export const DEFAULT_EDGE_THICKNESS = .5
 /**
  * Generate an SVG representation for the vertex
  * */
-export function drawVertex (vertex: Vertex,
+export function drawVertex (vertex: Vertex, key: number,
                             onMouseOver?: (e: React.MouseEvent) => void,
                             onClick?: (e: React.MouseEvent) => void) {
     let fillColor = vertex.colorHex || DEFAULT_VERTEX_COLOR
     let className = "vertex"
     if (vertex.shape === VertexShape.Square) {
-        return (
-            <rect className={className}
-                  x={vertex.position.x} y={vertex.position.y}
-                  width={6} height={6} fill={fillColor}
-                  onMouseOver={onMouseOver} onClick={onClick}/>
-        )
+        if (vertex.highlighted) {
+            return (
+                <g key={key}>
+                    <rect className={className} key={key}
+                          x={vertex.position.x} y={vertex.position.y}
+                          width={12} height={12} fill={fillColor + "50"}
+                          onMouseOver={onMouseOver} onClick={onClick}/>
+                    <rect className={className} key={key}
+                          x={vertex.position.x} y={vertex.position.y}
+                          width={6} height={6} fill={fillColor}/>
+                </g>
+            )
+        } else {
+            return (
+                <rect className={className} key={key}
+                      x={vertex.position.x} y={vertex.position.y}
+                      width={6} height={6} fill={fillColor}
+                      onMouseOver={onMouseOver} onClick={onClick}/>
+            )
+        }
     } else {
         if (vertex.highlighted) {
             return (
-                <g>
+                <g key={key}>
                     <circle cx={vertex.position.x} cy={vertex.position.y}
                             r={12} fill={fillColor + "50"}
                             onMouseOver={onMouseOver} onClick={onClick}/>
@@ -34,7 +48,7 @@ export function drawVertex (vertex: Vertex,
             )
         } else {
             return (
-                <circle className={className}
+                <circle className={className} key={key}
                         cx={vertex.position.x} cy={vertex.position.y}
                         r={6} fill={fillColor}
                         onMouseOver={onMouseOver} onClick={onClick}/>

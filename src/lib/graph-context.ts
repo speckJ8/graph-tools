@@ -1,5 +1,17 @@
 import React from "react"
-import { Graph } from "./graph"
+import { Graph, Vertex, Edge } from "./graph"
 
-let Context = React.createContext<Graph>({ vertices: [], edges: [] })
+interface ContextType {
+    graph: Graph
+    addVertex: (vertex: Vertex) => void
+    addEdge: (edge: Edge) => void
+}
+
+let Context = React.createContext<ContextType>({
+    graph: {
+        vertices: [], edges: []
+    },
+    addVertex: (_) => {},
+    addEdge: (_) => {},
+})
 export default Context
