@@ -12,9 +12,10 @@ export default class DisplayArea extends React.Component {
     private _DEFAULT_EDGE_COLOR = "#666666"
     private _DEFAULT_EDGE_THICKNESS = 1
 
-    private _svgContainer?: SVGElement
+    private _svgContainer?: SVGGraphicsElement
     private _clicked = false
     private _activeVertex?: Vertex = undefined
+    private _vertexBeingDragged?: Vertex = undefined
 
     private _canvasClick = (event: React.MouseEvent) => {
         if (!this._svgContainer)
@@ -50,6 +51,12 @@ export default class DisplayArea extends React.Component {
             this._activeVertex.highlighted = false
             updateVertex(this._activeVertex)
             this._activeVertex = undefined
+            return
+        }
+
+        if (!this._clicked) {
+            this._clicked = true
+            setTimeout(() => this._clicked = false, 500)
         } else {
             this._activeVertex = vertex
             this._activeVertex.highlighted = true
@@ -57,33 +64,56 @@ export default class DisplayArea extends React.Component {
         }
     }
 
+    private _dragStart = (vertex: Vertex, event: React.MouseEvent) => {
+        this._vertexBeingDragged = vertex
+    }
+
+    private _doDrag = (event: React.MouseEvent) => {
+        let { updateVertex } = this.context
+        if (this._vertexBeingDragged && this._svgContainer) {
+            event.preventDefault()
+            let ctm = this._svgContainer.getScreenCTM()
+            if (ctm) {
+                let x = (event.clientX - ctm.e) / ctm.a
+                let y = (event.clientY - ctm.f) / ctm.d
+                this._vertexBeingDragged.position = { x, y }
+                updateVertex(this._vertexBeingDragged)
+            }
+        }
+    }
+
+    private _dragEnd = (event: React.MouseEvent) => {
+        this._vertexBeingDragged = undefined
+    }
+
     private _drawVertex = (vertex: Vertex) => {
         let fillColor = vertex.colorHex || this._DEFAULT_VERTEX_COLOR
-        let className = "vertex"
 
         if (vertex.highlighted) {
             return (
                 <g key={vertex.key}
-                   onClick={e => this._onVertexClick(vertex, e)}>
+                   onClick={e => this._onVertexClick(vertex, e)}
+                   onMouseDown={e => this._dragStart(vertex, e)}>
                     <circle cx={vertex.position.x} cy={vertex.position.y}
-                            r={12} fill={fillColor + "50"}/>
-                    <circle className={className}
+                            r={14} fill={fillColor + "50"}/>
+                    <circle className="vertex"
                             cx={vertex.position.x} cy={vertex.position.y}
-                            r={6} fill={fillColor}/>
+                            r={8} fill={fillColor}/>
                 </g>
             )
         } else {
             return (
-                <circle className={className} key={vertex.key}
+                <circle className="vertex" key={vertex.key}
                         cx={vertex.position.x} cy={vertex.position.y}
-                        r={6} fill={fillColor}
-                        onClick={e => this._onVertexClick(vertex, e)}/>
+                        r={8} fill={fillColor}
+                        onClick={e => this._onVertexClick(vertex, e)}
+                        onMouseDown={e => this._dragStart(vertex, e)}/>
             )
         }
     }
 
 
-    _drawEdge = (edge: Edge) => {
+    private _drawEdge = (edge: Edge) => {
         let xa = edge.vertexA.position.x
         let ya = edge.vertexA.position.y
         let xb = edge.vertexB.position.x
@@ -125,7 +155,10 @@ export default class DisplayArea extends React.Component {
                 <div className="flex-grow">
                     <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
                          ref={r => this._svgContainer = r || undefined}
-                         onClick={this._canvasClick}>
+                         onMouseMove={this._doDrag}
+                         onClick={this._canvasClick}
+                         onMouseUp={this._dragEnd}
+                         onMouseLeave={this._dragEnd}>
                         <defs>
                             <pattern id="smallGrid" width="8" height="8"
                                      patternUnits="userSpaceOnUse">
