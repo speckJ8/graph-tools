@@ -1,6 +1,5 @@
 import React from "react"
 
-import DropdownButton from "./DropdownButton"
 import Help from "./Help"
 
 import { ReactComponent as Trash } from "../icons/trash.svg"
@@ -22,6 +21,12 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
         showFile: false,
         showTools: false,
         showParameters: false,
+    }
+
+    private _generateRandomGraph = () => {
+        let randomGraph = Tools.generateRandomGraph()
+        let { setGraph } = this.context
+        setGraph(randomGraph)
     }
 
     private _showFile = (event: React.MouseEvent) => {
@@ -79,10 +84,12 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
                     <div className="absolute left-0 bg-white border shadow-lg"
                          style={{ top: "105%" }}>
                         <div className="w-72 flex flex-col p-4">
-                            <button className="button text-left">
+                            <button className="button text-left"
+                                    onClick={this._generateRandomGraph}>
                                 Generate random graph
                             </button>
-                            <button className="button text-left">
+                            <button className="button text-left"
+                                    onClick={this._generateRandomGraph}>
                                 Generate parameterized random graph
                             </button>
                             <button className="button text-left">
