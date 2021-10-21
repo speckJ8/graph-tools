@@ -29,19 +29,37 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
         setGraph(randomGraph)
     }
 
-    private _showFile = (event: React.MouseEvent) => {
+    private _showFile = (event: React.MouseEvent, hover?: boolean) => {
         event.stopPropagation()
-        this.setState({ showFile: true, showTools: false, showParameters: false, })
+        if (hover) {
+            if (this.state.showTools || this.state.showParameters) {
+                this.setState({ showFile: true, showTools: false, showParameters: false, })
+            }
+        } else {
+            this.setState({ showFile: true, showTools: false, showParameters: false, })
+        }
     }
 
-    private _showParameters = (event: React.MouseEvent) => {
+    private _showParameters = (event: React.MouseEvent, hover?: boolean) => {
         event.stopPropagation()
-        this.setState({ showFile: false, showTools: false, showParameters: true, })
+        if (hover) {
+            if (this.state.showFile || this.state.showTools) {
+                this.setState({ showFile: false, showTools: false, showParameters: true, })
+            }
+        } else {
+            this.setState({ showFile: false, showTools: false, showParameters: true, })
+        }
     }
 
-    private _showTools = (event: React.MouseEvent) => {
+    private _showTools = (event: React.MouseEvent, hover?: boolean) => {
         event.stopPropagation()
-        this.setState({ showFile: false, showTools: true, showParameters: false, })
+        if (hover) {
+            if (this.state.showFile || this.state.showParameters) {
+                this.setState({ showFile: false, showTools: true, showParameters: false, })
+            }
+        } else {
+            this.setState({ showFile: false, showTools: true, showParameters: false, })
+        }
     }
 
     private _hideAll = () => {
@@ -55,7 +73,8 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
         <div className="h-12 px-6 py-2 border-b bg-white flex justify-between items-center"
              onClick={this._hideAll}>
             <div className="flex items-center">
-                <div className="relative button mr-2" onClick={this._showFile}>
+                <div className="relative button mr-2" onClick={this._showFile}
+                     onMouseOver={_ => this._showFile(_, true)}>
                     File
                     {showFile &&
                     <div className="absolute left-0 bg-white border shadow-lg"
@@ -78,7 +97,8 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
                     </div>
                     }
                 </div>
-                <div className="relative button mr-2" onClick={this._showTools}>
+                <div className="relative button mr-2" onClick={this._showTools}
+                     onMouseOver={_ => this._showTools(_, true)}>
                     Tools
                     {showTools &&
                     <div className="absolute left-0 bg-white border shadow-lg"
@@ -99,7 +119,8 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
                     </div>
                     }
                 </div>
-                <div className="relative button" onClick={this._showParameters}>
+                <div className="relative button" onClick={this._showParameters}
+                     onMouseOver={_ => this._showParameters(_, true)}>
                     Parameters
                     {showParameters &&
                     <div className="absolute left-0 bg-white border shadow-lg"
