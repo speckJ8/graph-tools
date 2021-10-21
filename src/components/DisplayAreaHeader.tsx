@@ -1,60 +1,146 @@
 import React from "react"
 
 import DropdownButton from "./DropdownButton"
+import Help from "./Help"
 
 import { ReactComponent as Trash } from "../icons/trash.svg"
+import { ReactComponent as Question } from "../icons/question.svg"
 
-export default class DisplayAreaHeader extends React.Component {
+import * as Tools from "../lib/tools"
+import GraphContext from "../lib/graph-context"
+
+interface State {
+    showFile: boolean
+    showTools: boolean
+    showParameters: boolean
+}
+
+export default class DisplayAreaHeader extends React.Component<{}, State> {
+    static contextType = GraphContext
+
+    state = {
+        showFile: false,
+        showTools: false,
+        showParameters: false,
+    }
+
+    private _showFile = (event: React.MouseEvent) => {
+        event.stopPropagation()
+        this.setState({ showFile: true, showTools: false, showParameters: false, })
+    }
+
+    private _showParameters = (event: React.MouseEvent) => {
+        event.stopPropagation()
+        this.setState({ showFile: false, showTools: false, showParameters: true, })
+    }
+
+    private _showTools = (event: React.MouseEvent) => {
+        event.stopPropagation()
+        this.setState({ showFile: false, showTools: true, showParameters: false, })
+    }
+
+    private _hideAll = () => {
+        this.setState({ showFile: false, showTools: false, showParameters: false, })
+    }
+
     render () {
+        let { showFile, showTools, showParameters } = this.state
+
         return (
-        <div className="h-12 px-6 py-2 border-b bg-white flex justify-between items-center">
+        <div className="h-12 px-6 py-2 border-b bg-white flex justify-between items-center"
+             onClick={this._hideAll}>
             <div className="flex items-center">
-                <DropdownButton className="button mr-2" title="File">
-                    <div className="w-48 flex flex-col p-4">
-                        <button className="button text-left">
-                            Save...
-                        </button>
-                        <button className="button text-left">
-                            Open...
-                        </button>
-                        <span className="border-t my-2"></span>
-                        <button className="button text-left">
-                            Delete vertices
-                        </button>
-                        <button className="button text-left">
-                            Delete edges
-                        </button>
+                <div className="relative button mr-2" onClick={this._showFile}>
+                    File
+                    {showFile &&
+                    <div className="absolute left-0 bg-white border shadow-lg"
+                         style={{ top: "105%" }}>
+                        <div className="w-48 flex flex-col p-4">
+                            <button className="button text-left">
+                                Save...
+                            </button>
+                            <button className="button text-left">
+                                Open...
+                            </button>
+                            <span className="border-t my-2"></span>
+                            <button className="button text-left">
+                                Delete vertices
+                            </button>
+                            <button className="button text-left">
+                                Delete edges
+                            </button>
+                        </div>
                     </div>
-                </DropdownButton>
-                <DropdownButton className="button mr-2" title="Tools">
-                    <div className="w-48 flex flex-col p-4">
-                        <button className="button text-left">
-                            Generate random graph
-                        </button>
+                    }
+                </div>
+                <div className="relative button mr-2" onClick={this._showTools}>
+                    Tools
+                    {showTools &&
+                    <div className="absolute left-0 bg-white border shadow-lg"
+                         style={{ top: "105%" }}>
+                        <div className="w-72 flex flex-col p-4">
+                            <button className="button text-left">
+                                Generate random graph
+                            </button>
+                            <button className="button text-left">
+                                Generate parameterized random graph
+                            </button>
+                            <button className="button text-left">
+                                Duplicate
+                            </button>
+                        </div>
                     </div>
-                </DropdownButton>
-                <DropdownButton className="DropdownButton" title="Parameters">
-                    <div className="w-48 flex flex-col p-4">
-                        <button className="button text-left">
-                            Number of components
-                        </button>
-                        <button className="button text-left">
-                            Partitions
-                        </button>
-                        <button className="button text-left">
-                            Minimum cut
-                        </button>
-                        <button className="button text-left">
-                            Maximum matching
-                        </button>
+                    }
+                </div>
+                <div className="relative button" onClick={this._showParameters}>
+                    Parameters
+                    {showParameters &&
+                    <div className="absolute left-0 bg-white border shadow-lg"
+                         style={{ top: "105%" }}>
+                        <div className="w-64 flex flex-col p-4">
+                            <div className="flex items-center justify-between">
+                                <button className="button text-left flex-grow">
+                                    Number of components
+                                </button>
+                                <button className="p-1">
+                                    <Question className="h-3 text-blue-400"/>
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <button className="button text-left flex-grow">
+                                    Partitions
+                                </button>
+                                <button className="p-1">
+                                    <Question className="h-3 text-blue-400"/>
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <button className="button text-left flex-grow">
+                                    Minimum cut
+                                </button>
+                                <button className="p-1">
+                                    <Question className="h-3 text-blue-400"/>
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <button className="button text-left flex-grow">
+                                    Maximum matching
+                                </button>
+                                <button className="p-1">
+                                    <Question className="h-3 text-blue-400"/>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </DropdownButton>
+                    }
+                </div>
             </div>
             <div className="flex items-center">
                 <button className="button" title="Clear">
                     <Trash className="h-4"/>
                 </button>
             </div>
+            {/*<Help helpPage="maximum-matching"/>*/}
         </div>
         )
     }
