@@ -6,8 +6,7 @@ import {
 } from "./graph"
 
 /**
- * Definitions of the graph objects that visible to the user in when
- * scripting.
+ * Definitions of the graph objects that visible to the user when scripting.
  * */
 
 export class Graph {
