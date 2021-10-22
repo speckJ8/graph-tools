@@ -1,76 +1,82 @@
 import React from 'react'
 
 import ResizableContainer from "./components/ResizableContainer"
-
 import TextEditorArea from './components/TextEditorArea'
 import LeftPanel from './components/LeftPanel'
 import DisplayArea from './components/DisplayArea'
 
-import { Graph, Vertex, Edge } from "./lib/graph"
-import GraphContext from "./lib/graph-context"
+import { Graph, GraphState, Vertex, Edge } from "./lib/graph"
 
 interface State {
-    graph: Graph
+    graphState: GraphState
 }
 
 export default class App extends React.Component<{}, State> {
     constructor (props: {}) {
         super(props)
         this.state = {
-            graph: {
-                vertices: [
-                    {
-                        key: 0,
-                        position: { x: 100, y: 100 },
-                    },
-                    {
-                        key: 1,
-                        position: { x: 150, y: 100 },
-                    },
-                ],
-                edges: []
+            graphState: {
+                graph: {
+                    vertices: [],
+                    edges: []
+                },
+                setGraph: this._setGraph,
+                addVertex: this._addVertex,
+                updateVertex: this._updateVertex,
+                addEdge: this._addEdge,
+                updateEdge: this._updateEdge,
             }
         }
     }
 
+    private _setGraph = (graph: Graph) => {
+        let { graphState } = this.state
+        this.setState({ graphState: { ...graphState, graph } })
+    }
+
     private _addVertex = (vertex: Vertex) => {
-        vertex.key = this.state.graph.vertices.length
-        this.state.graph.vertices.push(vertex)
-        this.setState({ graph: this.state.graph })
+        let { graphState } = this.state
+        let { graph } = graphState
+        vertex.key = graph.vertices.length
+        graph.vertices.push(vertex)
+        this.setState({ graphState: { ...graphState, graph: graph } })
     }
 
     private _addEdge = (edge: Edge) => {
-        edge.key = this.state.graph.edges.length
-        this.state.graph.edges.push(edge)
-        this.setState({ graph: this.state.graph })
+        let { graphState } = this.state
+        let { graph } = graphState
+        edge.key = graph.edges.length
+        graph.edges.push(edge)
+        this.setState({ graphState: { ...graphState, graph: graph } })
     }
 
     private _updateVertex = (vertex: Vertex) => {
-        this.setState({ graph: { ...this.state.graph, [vertex.key]: vertex } })
+        let { graphState } = this.state
+        graphState.graph.vertices[vertex.key] = vertex
+        this.setState({ graphState })
+    }
+
+    private _updateEdge = (edge: Edge) => {
+        let { graphState } = this.state
+        graphState.graph.edges[edge.key] = edge
+        this.setState({ graphState })
     }
 
     render () {
-        let context = {
-            graph: this.state.graph,
-            addVertex: this._addVertex,
-            updateVertex: this._updateVertex,
-            addEdge: this._addEdge,
-        }
+        let { graphState } = this.state
 
         return (
-        <GraphContext.Provider value={context}>
-            <div className="app-container flex">
-                <div className="w-14">
-                    <LeftPanel />
-                </div>
-                <div className="flex-grow">
-                    <DisplayArea />
-                </div>
-                <ResizableContainer className="border-l w-2/5">
-                    <TextEditorArea/>
-                </ResizableContainer>
+        <div className="app-container flex">
+            <div className="w-14">
+                <LeftPanel />
             </div>
-        </GraphContext.Provider>
+            <div className="flex-grow">
+                <DisplayArea graphState={graphState}/>
+            </div>
+            <ResizableContainer className="border-l w-2/5">
+                <TextEditorArea graphState={graphState}/>
+            </ResizableContainer>
+        </div>
         )
     }
 }
