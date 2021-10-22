@@ -1,15 +1,13 @@
 import React from "react"
 import TextEditor from "./TextEditor"
-
 import { ReactComponent as DocumentAdd } from "../icons/document-add.svg"
 import { ReactComponent as Execute } from "../icons/execute.svg"
 import { ReactComponent as Output } from "../icons/output.svg"
 import { ReactComponent as ChevronUp } from "../icons/chevron-up.svg"
 import { ReactComponent as ChevronDown } from "../icons/chevron-down.svg"
 import { ReactComponent as Circle } from "../icons/circle.svg"
-
-import { executeScript } from "../lib/execute-script"
-import GraphContext from "../lib/graph-context"
+import { execute } from "../lib/script"
+import { GraphState } from "../lib/graph"
 
 interface State {
     script: string
@@ -19,9 +17,11 @@ interface State {
     executionStatus: "none" | "failed" | "succeeded"
 }
 
-export default class TextEditorArea extends React.Component<{}, State> {
-    static contextType = GraphContext
+interface Props {
+    graphState: GraphState
+}
 
+export default class TextEditorArea extends React.Component<Props, State> {
     state: State = {
         showLogs: false,
         logs: "No logs...",
@@ -46,7 +46,7 @@ vertices.forEach((v, i) => {
         let { script } = this.state
 
         this.setState({ executing: true })
-        let result = await executeScript(script, this.context)
+        let result = await execute(script, this.props.graphState)
         if (result) {
             this.setState({
                 executing: false,

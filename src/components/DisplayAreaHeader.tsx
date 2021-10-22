@@ -1,12 +1,9 @@
 import React from "react"
-
 import Help from "./Help"
-
 import { ReactComponent as Trash } from "../icons/trash.svg"
 import { ReactComponent as Question } from "../icons/question.svg"
-
 import * as Tools from "../lib/tools"
-import GraphContext from "../lib/graph-context"
+import { GraphState } from "../lib/graph"
 
 interface State {
     showFile: boolean
@@ -14,9 +11,11 @@ interface State {
     showParameters: boolean
 }
 
-export default class DisplayAreaHeader extends React.Component<{}, State> {
-    static contextType = GraphContext
+interface Props {
+    graphState: GraphState
+}
 
+export default class DisplayAreaHeader extends React.Component<Props, State> {
     state = {
         showFile: false,
         showTools: false,
@@ -25,7 +24,7 @@ export default class DisplayAreaHeader extends React.Component<{}, State> {
 
     private _generateRandomGraph = () => {
         let randomGraph = Tools.generateRandomGraph()
-        let { setGraph } = this.context
+        let { setGraph } = this.props.graphState
         setGraph(randomGraph)
     }
 
