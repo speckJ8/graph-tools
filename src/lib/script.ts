@@ -1,10 +1,8 @@
-import { GraphContextType } from "./graph-context"
 import { Vertex } from "./user-graph"
+import { GraphState } from "./graph"
 
-export function executeScript (script: string,
-                               ctx: GraphContextType): string|undefined {
-
-    let vertices = ctx.graph.vertices.map(v => new Vertex(v, ctx.updateVertex))
+export function execute (script: string, state: GraphState): string|undefined {
+    let vertices = state.graph.vertices.map(v => new Vertex(v, state.updateVertex))
     let _script = `
         let vertices = arguments[0]
         ${script}
