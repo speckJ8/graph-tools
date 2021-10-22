@@ -26,8 +26,7 @@ export class Vertex {
     private vertex: InternalVertex
     private triggerUpdate: (vertex: InternalVertex) => void
 
-    constructor (vertex: InternalVertex,
-                triggerUpdate: (v: InternalVertex) => void) {
+    constructor (vertex: InternalVertex, triggerUpdate: (v: InternalVertex) => void) {
         this.vertex = vertex
         this.triggerUpdate = triggerUpdate
     }
@@ -47,8 +46,7 @@ export class Edge {
     private edge: InternalEdge
     private triggerUpdate: (edge: InternalEdge) => void
 
-    constructor (edge: InternalEdge,
-                triggerUpdate: (v: InternalEdge) => void) {
+    constructor (edge: InternalEdge, triggerUpdate: (v: InternalEdge) => void) {
         this.edge = edge
         this.triggerUpdate = triggerUpdate
     }
