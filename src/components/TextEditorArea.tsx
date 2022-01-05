@@ -15,6 +15,7 @@ interface State {
     logs: string
     executing: boolean
     executionStatus: "none" | "failed" | "succeeded"
+    chosenScript: string
 }
 
 interface Props {
@@ -27,9 +28,10 @@ export default class TextEditorArea extends React.Component<Props, State> {
         logs: "No logs...",
         executing: false,
         executionStatus: "none",
+        chosenScript: "new-script",
         script: `/** Example script */
 
-vertices.forEach((v, i) => {
+graph.vertices.forEach((v, i) => {
     setTimeout(() => {
         v.colorHex = "#ff0000"
         v.highlighted = true
@@ -44,9 +46,10 @@ vertices.forEach((v, i) => {
 
     private _runScript = async () => {
         let { script } = this.state
+        let { graphState } = this.props
 
         this.setState({ executing: true })
-        let result = await execute(script, this.props.graphState)
+        let result = await execute(script, graphState)
         if (result) {
             this.setState({
                 executing: false,
@@ -65,12 +68,16 @@ vertices.forEach((v, i) => {
         }, 5000)
     }
 
+    private _changeScript = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.setState({ chosenScript: event.target.value })
+    }
+
     render () {
-        let { showLogs, logs, executing, executionStatus, script } = this.state
+        let { showLogs, logs, executing, executionStatus, script, chosenScript } = this.state
 
         let logsBackground = undefined
         if (executionStatus === "failed") {
-            logsBackground = "#FEE2E2"
+            logsBackground = "#EE6565"
         } else if (executionStatus === "succeeded") {
             logsBackground = "#ECFDF5"
         }
@@ -79,10 +86,10 @@ vertices.forEach((v, i) => {
         <div className="h-full w-full flex flex-col">
             <div className="px-6 py-2 h-12 border-b flex justify-between items-center">
                 <div className="w-full flex items-center justify-between">
-                    <select className="button-with-border" title="Choose script">
-                        <option>Script 1</option>
-                        <option>Maximum Matching</option>
-                        <option>Shortest Paths</option>
+                    <select className="button-with-border" title="Choose script"
+                            value={chosenScript}
+                            onChange={this._changeScript}>
+                        <option value="new-script">New Script</option>
                     </select>
                     <div className="flex items-center">
                         <button className="button" title="New script"
@@ -115,7 +122,7 @@ vertices.forEach((v, i) => {
                         <>
                             <Output className="h-4 mr-4" />
                         {executionStatus === "failed" ?
-                            <small>Execution failed</small>
+                            <small className="text-black">Execution failed</small>
                         : executionStatus === "succeeded" ?
                             <small>Execution succeeded</small>
                         :
