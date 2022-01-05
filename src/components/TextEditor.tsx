@@ -11,6 +11,7 @@ interface Props {
 export default class TextEditor extends React.Component<Props> {
     private _editorSettings = {
         fontSize: 13,
+        fontFamily: "Roboto",
     }
 
     render () {
