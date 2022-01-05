@@ -1,9 +1,8 @@
 import React from "react"
-import Help from "./Help"
 import { ReactComponent as Trash } from "../icons/trash.svg"
-import { ReactComponent as Question } from "../icons/question.svg"
 import * as Tools from "../lib/tools"
 import { GraphState } from "../lib/graph"
+import * as Algos from "../lib/algos"
 
 interface State {
     showFile: boolean
@@ -65,13 +64,18 @@ export default class DisplayAreaHeader extends React.Component<Props, State> {
         this.setState({ showFile: false, showTools: false, showParameters: false, })
     }
 
+    private _connectedComponents = () => {
+        let { graphState } = this.props
+        Algos.connectedComponents(graphState)
+    }
+
     render () {
         let { showFile, showTools, showParameters } = this.state
 
         return (
         <div className="h-12 px-6 py-2 border-b bg-white flex justify-between items-center"
              onClick={this._hideAll}>
-            <div className="flex items-center">
+            <div className="flex items-center" onMouseLeave={this._hideAll}>
                 <div className="relative button mr-2" onClick={this._showFile}
                      onMouseOver={_ => this._showFile(_, true)}>
                     File
@@ -84,13 +88,6 @@ export default class DisplayAreaHeader extends React.Component<Props, State> {
                             </button>
                             <button className="button text-left">
                                 Open...
-                            </button>
-                            <span className="border-t my-2"></span>
-                            <button className="button text-left">
-                                Delete vertices
-                            </button>
-                            <button className="button text-left">
-                                Delete edges
                             </button>
                         </div>
                     </div>
@@ -107,13 +104,6 @@ export default class DisplayAreaHeader extends React.Component<Props, State> {
                                     onClick={this._generateRandomGraph}>
                                 Generate random graph
                             </button>
-                            <button className="button text-left"
-                                    onClick={this._generateRandomGraph}>
-                                Generate parameterized random graph
-                            </button>
-                            <button className="button text-left">
-                                Duplicate
-                            </button>
                         </div>
                     </div>
                     }
@@ -126,37 +116,28 @@ export default class DisplayAreaHeader extends React.Component<Props, State> {
                          style={{ top: "105%" }}>
                         <div className="w-64 flex flex-col p-4">
                             <div className="flex items-center justify-between">
-                                <button className="button text-left flex-grow">
-                                    Number of components
-                                </button>
-                                <button className="p-1">
-                                    <Question className="h-3 text-blue-400"/>
+                                <button className="button text-left flex-grow"
+                                        onClick={this._connectedComponents}>
+                                    Connected Components
                                 </button>
                             </div>
+                            {/*
                             <div className="flex items-center justify-between">
                                 <button className="button text-left flex-grow">
                                     Partitions
-                                </button>
-                                <button className="p-1">
-                                    <Question className="h-3 text-blue-400"/>
                                 </button>
                             </div>
                             <div className="flex items-center justify-between">
                                 <button className="button text-left flex-grow">
                                     Minimum cut
                                 </button>
-                                <button className="p-1">
-                                    <Question className="h-3 text-blue-400"/>
-                                </button>
                             </div>
                             <div className="flex items-center justify-between">
                                 <button className="button text-left flex-grow">
                                     Maximum matching
                                 </button>
-                                <button className="p-1">
-                                    <Question className="h-3 text-blue-400"/>
-                                </button>
                             </div>
+                            */}
                         </div>
                     </div>
                     }

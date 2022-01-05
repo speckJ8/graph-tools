@@ -17,30 +17,30 @@ export function generateRandomGraph (options?: RandomGraphOptions): Graph {
         graph.vertices.push({
             key: v,
             position: { x, y },
-            neighbours: [],
+            incidentEdges: [],
         })
     }
 
     let edgeKey = 0
     for (let v = 0; v <= numVertices; v++) {
         let vertexA = graph.vertices[v]
-        let neighbours = Math.floor(Math.random()*(2**numVertices))
+        let incidentEdges = Math.floor(Math.random()*(2**numVertices))
         for (let u = 0; u <= numVertices; u++) {
             let vertexB = graph.vertices[u]
             if (!_options.multigraph &&
                 // we don't want a multigraph so loops are not included and multiple
-                // edges between the same pair of vertices is also not included
-                (u === v || vertexA.neighbours.find(v => v.key === vertexB.key))) {
+                // edges between the same pair of vertices are also not included
+                (u === v || vertexA.incidentEdges.find(v => v.key === vertexB.key))) {
                 continue;
-            } else if (neighbours & (1 << u)) {
+            } else if (incidentEdges & (1 << u)) {
                 let edge = {
                     key: edgeKey++,
                     vertexA,
                     vertexB,
                 }
                 graph.edges.push(edge)
-                vertexA.neighbours.push(edge)
-                vertexB.neighbours.push(edge)
+                vertexA.incidentEdges.push(edge)
+                vertexB.incidentEdges.push(edge)
             }
         }
     }

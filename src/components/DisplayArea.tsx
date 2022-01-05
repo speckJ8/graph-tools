@@ -29,7 +29,7 @@ export default class DisplayArea extends React.Component<Props> {
             let svgRect = this._svgContainer.getBoundingClientRect()
             let x = event.clientX - svgRect.x
             let y = event.clientY - svgRect.y
-            addVertex({ key: -1, position: { x, y }, neighbours: [] })
+            addVertex({ key: -1, position: { x, y }, incidentEdges: [] })
         }
 
         if (this._activeVertex) {
@@ -110,7 +110,6 @@ export default class DisplayArea extends React.Component<Props> {
             )
         }
     }
-
 
     private _drawEdge = (edge: Edge) => {
         let xa = edge.vertexA.position.x
